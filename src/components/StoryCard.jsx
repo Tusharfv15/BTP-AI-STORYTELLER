@@ -8,7 +8,7 @@ function StoryCard({ title, description, imageUrl, id, maxPages }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105 hover:shadow-lg">
       <img
-        src={childImage}
+        src={imageUrl || childImage}
         alt={title}
         className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
       />

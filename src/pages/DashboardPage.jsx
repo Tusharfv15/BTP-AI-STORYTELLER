@@ -6,14 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-
 function DashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const [stories,setStories] = useState([]);
+  const [stories, setStories] = useState([]);
   const navigate = useNavigate();
   const toggleModal = () => setIsModalOpen(!isModalOpen);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const [storyDetails, setStoryDetails] = useState({
     storyTitle: "",
@@ -44,22 +43,24 @@ function DashboardPage() {
       }
     } catch (error) {
       console.error("Error creating story:", error);
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/story/stories/${user.userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${BACKEND_URL}/api/story/stories/${user.userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         if (response.status === 200) {
           const data = await response.json();
           setStories(data.stories);
@@ -72,7 +73,6 @@ function DashboardPage() {
 
     fetchStories(); // Call the function to fetch stories
   }, [user._id, BACKEND_URL]);
-  
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -90,18 +90,22 @@ function DashboardPage() {
 
         {/* Story Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        { stories.length === 0 ? (
-          <div className="text-lg font-semibold text-gray-600 flex items-center">No Stories Found</div>
-        ):stories.map((story,index)=>(
-          <StoryCard 
-          title={story?.storyTitle} 
-          description={story?.storyDescription} 
-          imageUrl={story?.storyContent[0]?.pageImage ||"" }
-          id={story?._id}
-          key={index}
-          maxPages={story?.maxPages}/>
-          
-        ))}
+          {stories.length === 0 ? (
+            <div className="text-lg font-semibold text-gray-600 flex items-center">
+              No Stories Found
+            </div>
+          ) : (
+            stories.map((story, index) => (
+              <StoryCard
+                title={story?.storyTitle}
+                description={story?.storyDescription}
+                imageUrl={story?.storyContent[0]?.pageImage || ""}
+                id={story?._id}
+                key={index}
+                maxPages={story?.maxPages}
+              />
+            ))
+          )}
           {/* <StoryCard
             title="Galactic Explorers"
             description="Join the crew on an interstellar mission to save humanity."
@@ -212,19 +216,22 @@ function DashboardPage() {
                     Cancel
                   </button>
 
-                  {loading ? ( <Button
-              disabled
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <Loader2 className="animate-spin mr-2 h-4 w-4" />
-              Please wait
-            </Button>):( <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    Generate
-                  </button>)}
-                 
+                  {loading ? (
+                    <Button
+                      disabled
+                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                      Please wait
+                    </Button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      Generate
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
