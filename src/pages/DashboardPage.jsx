@@ -14,6 +14,7 @@ function DashboardPage() {
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const [loading, setLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
+
   const [storyDetails, setStoryDetails] = useState({
     storyTitle: "",
     storyDescription: "",
@@ -51,8 +52,9 @@ function DashboardPage() {
   useEffect(() => {
     const fetchStories = async () => {
       try {
+        if (!user?.userId) return;
         const response = await fetch(
-          `${BACKEND_URL}/api/story/stories/${user.userId}`,
+          `${BACKEND_URL}/api/story/stories/${user?.userId}`,
           {
             method: "GET",
             headers: {
@@ -64,6 +66,7 @@ function DashboardPage() {
         if (response.status === 200) {
           const data = await response.json();
           setStories(data.stories);
+
           console.log(data);
         }
       } catch (error) {
@@ -72,7 +75,10 @@ function DashboardPage() {
     };
 
     fetchStories(); // Call the function to fetch stories
-  }, [user._id, BACKEND_URL]);
+  }, [user?.userId, BACKEND_URL]);
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">

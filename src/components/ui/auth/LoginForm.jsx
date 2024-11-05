@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, Lock, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
+import { UserContext } from "@/context/UserContext";
+import { toast } from "sonner";
+import { Button } from "../button";
 
 function LoginForm() {
   const [signUpInfo, setLoginInfo] = useState({
@@ -9,10 +12,37 @@ function LoginForm() {
 
     password: "",
   });
-
-  const handleFormSubmit = (e) => {
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const [loading, setLoading] = useState(false);
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(signUpInfo);
+    try {
+      setLoading(true);
+      const response = await fetch(`${BACKEND_URL}/api/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(signUpInfo),
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      navigate("/dashboard");
+      toast.success(data.message);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
   const { authState, toggleAuthState } = useContext(AuthContext);
 
@@ -22,8 +52,6 @@ function LoginForm() {
         Log In
       </h2>
       <form className="space-y-4" onSubmit={handleFormSubmit}>
-       
-
         {/* Parent Email Field */}
         <div>
           <label
@@ -47,8 +75,6 @@ function LoginForm() {
             />
           </div>
         </div>
-
-        
 
         {/* Password Field */}
         <div>
@@ -76,12 +102,22 @@ function LoginForm() {
 
         {/* Submit Button */}
         <div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Sign Up
-          </button>
+          {loading ? (
+            <Button
+              disabled
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <Loader2 className="animate-spin mr-2 h-4 w-4" />
+              Please wait
+            </Button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Log In
+            </button>
+          )}
         </div>
 
         {/* Link to Login */}

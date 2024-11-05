@@ -46,7 +46,7 @@ function SignUpForm() {
         toast.error(data.error);
         return;
       }
-      setUser(data.parentEmail);
+      setUser(data);
       localStorage.setItem("user", JSON.stringify(data));
 
       navigate("/dashboard");
