@@ -3,7 +3,7 @@ import { Book, LogOut, HelpCircle, Pen } from "lucide-react";
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -33,10 +33,12 @@ function Navbar() {
   return (
     <nav className="bg-blue-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <Book className="text-white" size={24} />
-          <span className="text-white text-xl font-bold">BookApp</span>
-        </div>
+        <Link to={"/dashboard"}>
+          <div className="flex items-center space-x-2">
+            <Book className="text-white" size={24} />
+            <span className="text-white text-xl font-bold">BookApp</span>
+          </div>
+        </Link>
         <div className="flex items-center space-x-4">
           {user && (
             <a

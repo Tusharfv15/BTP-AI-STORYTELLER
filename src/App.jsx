@@ -10,7 +10,8 @@ import { UserContext } from "./context/UserContext";
 import ReadStoryPage from "./pages/ReadStoryPage";
 import AssignmentPage from "./pages/AssignmentPage";
 import FeedbackPage from "./pages/FeedbackPage";
-
+import ReadFullStoryPage from "./pages/ReadFullStoryPage";
+import FinalFeedback from "./pages/FinalFeedback";
 
 function App() {
   const { user } = useContext(UserContext);
@@ -36,6 +37,14 @@ function App() {
         <Route
           path="/dashboard/Feedback/:sid"
           element={user ? <FeedbackPage /> : <AuthPage />}
+        />
+        <Route
+          path="/dashboard/ReadFull/:sid"
+          element={user ? <ReadFullStoryPage /> : <AuthPage />}
+        />
+        <Route
+          path="/dashboard/FinalFeedback/:aid"
+          element={user ? <FinalFeedback /> : <AuthPage />}
         />
       </Routes>
     </div>

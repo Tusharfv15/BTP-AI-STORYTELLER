@@ -5,13 +5,16 @@ import { Link, useNavigate } from "react-router-dom";
 
 function StoryCard({ title, description, imageUrl, id, maxPages }) {
   const navigate = useNavigate();
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-      <img
-        src={imageUrl || childImage}
-        alt={title}
-        className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
-      />
+      {imageUrl && (
+        <img
+          src={imageUrl || ""}
+          //alt={title}
+          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+        />
+      )}
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-xl font-semibold mb-2 truncate">{title}</h3>
         <p className="text-gray-600 mb-4 flex-grow">{description}</p>
@@ -32,6 +35,11 @@ function StoryCard({ title, description, imageUrl, id, maxPages }) {
           >
             Take Assessment
           </button>
+          <Link to={`/dashboard/ReadFull/${id}`}>
+            <button className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors duration-300">
+              Read Full
+            </button>
+          </Link>
         </div>
       </div>
     </div>
